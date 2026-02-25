@@ -75,7 +75,7 @@ class ItemController extends Controller
             ]);
 
             return redirect()
-                ->route('items.index')
+                ->route('inventory.index')
                 ->with('success', 'Item berhasil diupdate');
         } catch (\Throwable $e) {
             // report($e); // kirim ke log
@@ -91,7 +91,7 @@ class ItemController extends Controller
         $item->delete();
 
         return redirect()
-            ->route('items.index')
+            ->route('inventory.index')
             ->with('success', 'Item berhasil dihapus');
     }
 }

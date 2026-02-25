@@ -1805,6 +1805,9 @@ html {
 .inline-block {
   display: inline-block;
 }
+.inline {
+  display: inline;
+}
 .flex {
   display: flex;
 }
@@ -1841,6 +1844,18 @@ html {
 .h-8 {
   height: 2rem;
 }
+.h-\[90vh\] {
+  height: 90vh;
+}
+.h-\[70vh\] {
+  height: 70vh;
+}
+.h-\[50vh\] {
+  height: 50vh;
+}
+.h-\[60vh\] {
+  height: 60vh;
+}
 .min-h-screen {
   min-height: 100vh;
 }
@@ -1867,6 +1882,9 @@ html {
 }
 .w-full {
   width: 100%;
+}
+.w-\[90vh\] {
+  width: 90vh;
 }
 .max-w-6xl {
   max-width: 72rem;
@@ -2093,6 +2111,9 @@ html {
 }
 .pt-8 {
   padding-top: 2rem;
+}
+.text-left {
+  text-align: left;
 }
 .text-center {
   text-align: center;

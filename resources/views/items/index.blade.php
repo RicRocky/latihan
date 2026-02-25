@@ -1,5 +1,7 @@
 @extends("items/layout")
 
+@section("title-web", "Inventory")
+
 @section("judul", "Inventory")
 
 @section("content")
@@ -9,7 +11,7 @@
             <div class="overflow-x-auto">
                 <table class="table table-md text-black">
                     <thead>
-                        <tr class="text-white bg-black">
+                        <tr class="text-white text-center bg-black">
                             <th>No</th>
                             <th>Nama</th>
                             <th>Jumlah</th>
@@ -20,12 +22,18 @@
                     <tbody>
                         @foreach ($items as $item)
                             <tr>
-                                <td>{{ $items->firstItem() + $loop->index }}</td>
-                                <td>{{ $item->nama }}</td>
-                                <td>{{ $item->jumlah }}</td>
-                                <td>{{ $item->harga }}</td>
-                                <td>
+                                <td class="text-center">{{ $items->firstItem() + $loop->index }}</td>
+                                <td class="text-left">{{ $item->nama }}</td>
+                                <td class="text-center">{{ $item->jumlah }}</td>
+                                <td class="text-left">Rp{{ $item->harga }}</td>
+                                <td class="text-center">
                                     <a href="{{ route("inventory.edit", $item) }}" class="btn">Edit</a>
+                                    <form action="{{ route("inventory.destroy", $item) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method("DELETE")
+
+                                        <button class="btn">Hapus</button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach

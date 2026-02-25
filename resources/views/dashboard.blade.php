@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <main>
-            <div class="text-center">
+            <div class="h-[60vh] flex justify-center items-center flex-col text-center">
                 <h1 class="font-bold">Dashboard</h1>
                 <p>Welcome to Train Outclass</p>
             </div>
