@@ -32,15 +32,28 @@
                 <div class="mt-2">
                     Jumlah
                     <br>
-                    <input value="{{ $item->jumlah }}" type="number" name="jumlah" step="1" min="0" placeholder="Masukanan jumlah item"
-                        class="input input-bordered w-full" />
+                    <input value="{{ $item->jumlah }}" type="number" name="jumlah" step="1" min="0"
+                        placeholder="Masukanan jumlah item" class="input input-bordered w-full" />
+                </div>
+
+                <div class="mt-2">
+                    Gudang
+                    <br>
+                    <select name="gudang_id" class="py-1 text-sm select select-bordered w-full max-w-xs">
+                        <option disabled>Nama Gudang</option>
+                        @foreach ($gudangs as $gudang)
+                            <option value="{{ $gudang->id }}" {{ old("gudang_id") == $gudang->id ? "selected" : "" }}>
+                                {{ $gudang->nama }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="mt-2">
                     Harga
                     <br>
-                    <input value="{{ $item->harga }}" type="number" name="harga" step="any" min="0" placeholder="Masukanan harga item"
-                        class="input input-bordered w-full" />
+                    <input value="{{ $item->harga }}" type="number" name="harga" step="any" min="0"
+                        placeholder="Masukanan harga item" class="input input-bordered w-full" />
                 </div>
 
                 <div class="mt-3 flex justify-center items-center">

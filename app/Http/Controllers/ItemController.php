@@ -2,19 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Gudang;
 use App\Models\Item;
 use App\Services\ItemService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\DB;
 
 class ItemController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $items = Item::latest()->paginate(10);
-        return view('items.index', compact('items'));
+        $query = Item::query();
+        $gudangs = Gudang::all();
+
+        if ($request->filled("search")) {
+            $query->where("nama", "like", "%" . $request->search . "%");
+        }
+
+        if ($request->filled("minJumlah")) {
+            $query->where('jumlah', ">=", $request->minJumlah);
+        }
+
+        $items = $query->latest()->paginate(10)->withQueryString();
+        return view('items.index', [
+            'items' => $items,
+            "gudangs" => $gudangs,
+        ]);
     }
 
     public function create(): View
@@ -28,13 +42,12 @@ class ItemController extends Controller
             'nama' => 'required|string|max:255',
             'jumlah' => 'required|integer|min:0',
             'harga' => 'required|numeric|min:0',
+            'gudang_id' => 'required|exists:gudangs,id',
         ]);
 
         try {
             $itemService->create($validated);
-
-            return redirect()
-                ->route('item.index')
+            return back()
                 ->with('success', 'Item berhasil dibuat');
         } catch (\Throwable $e) {
 
@@ -55,8 +68,11 @@ class ItemController extends Controller
 
     public function edit(Item $item)
     {
+        $gudangs = Gudang::all();
+
         return view('items.edit', [
             'item' => $item,
+            'gudangs' => $gudangs,
         ]);
     }
 
@@ -66,6 +82,7 @@ class ItemController extends Controller
             'nama' => 'required|string|max:255',
             'jumlah' => 'required|integer|min:0',
             'harga' => 'required|numeric|min:0',
+            'gudang_id' => 'required|exists:gudangs,id',
         ]);
 
         try {
@@ -78,8 +95,6 @@ class ItemController extends Controller
                 ->route('inventory.index')
                 ->with('success', 'Item berhasil diupdate');
         } catch (\Throwable $e) {
-            // report($e); // kirim ke log
-
             return back()
                 ->withInput()
                 ->withErrors('Terjadi kesalahan saat mengubah data.');
@@ -90,8 +105,36 @@ class ItemController extends Controller
     {
         $item->delete();
 
-        return redirect()
-            ->route('inventory.index')
+        return back()
             ->with('success', 'Item berhasil dihapus');
+    }
+
+    public function aktif(Request $request)
+    {
+        $query = Item::query()->onlyTrashed();
+
+        if ($request->filled("search")) {
+            $query->where("nama", "like", "%" . $request->search . "%");
+        }
+
+        if ($request->filled("minJumlah")) {
+            $query->where('jumlah', ">=", $request->minJumlah);
+        }
+
+        $items = $query->latest()->paginate(10)->withQueryString();
+
+        return view('items.aktif', compact('items'));
+    }
+
+    public function aktifProcess(Request $request)
+    {
+        $request->validate([
+            "id" => "required|exists:items,id"
+        ]);
+
+        $item = Item::onlyTrashed()->find($request->id);
+        $item->restore();
+
+        return back();
     }
 }

@@ -24,5 +24,9 @@ Route::middleware('auth')->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
+    // Item
+    Route::get("inventory/aktif", [ItemController::class, "aktif"])->name("inventory.aktif");
+    Route::post("inventory/aktif-process", [ItemController::class, "aktifProcess"])->name("inventory.aktif-process");
     Route::resource('inventory', ItemController::class)->parameters(['inventory' => 'item']);
+
 });
