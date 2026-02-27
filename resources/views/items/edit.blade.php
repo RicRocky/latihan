@@ -42,7 +42,7 @@
                     <select name="gudang_id" class="py-1 text-sm select select-bordered w-full max-w-xs">
                         <option disabled>Nama Gudang</option>
                         @foreach ($gudangs as $gudang)
-                            <option value="{{ $gudang->id }}" {{ old("gudang_id") == $gudang->id ? "selected" : "" }}>
+                            <option value="{{ $gudang->id }}" {{ $item->gudang_id == $gudang->id ? "selected" : "" }}>
                                 {{ $gudang->nama }}
                             </option>
                         @endforeach

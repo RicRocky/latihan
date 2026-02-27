@@ -33,7 +33,7 @@ class ItemController extends Controller
 
     public function create(): View
     {
-        return view('items.create');
+        return view('items.index');
     }
 
     public function store(Request $request, ItemService $itemService): RedirectResponse

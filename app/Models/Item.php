@@ -30,6 +30,6 @@ class Item extends Model
     }
 
     public function gudang(): BelongsTo{
-        return $this->belongsTo(Gudang::class);
+        return $this->belongsTo(Gudang::class)->withTrashed();
     }
 }
