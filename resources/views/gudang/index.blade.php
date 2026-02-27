@@ -60,6 +60,43 @@
 
     <section class="mt-5 bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 card bg-white border-b border-gray-200">
+            <h3 class="text-2xl py-3 text-black font-extrabold text-center">Pesan Item Dari Gudang</h3>
+            <form action="{{ route('kirim-pesan') }}" method="POST" class="text-black px-auto">
+                @csrf
+                <div class="mt-2">
+                    Gudang
+                    <br>
+                    <select name="gudang_id" class="py-1 text-sm select select-bordered select-sm w-full max-w-xs">
+                        <option disabled>Nama Gudang</option>
+                        @foreach ($gudangs as $gudang)
+                            <option value="{{ $gudang->id }}" {{ old("gudang_id") == $gudang->id ? "selected" : "" }}>
+                                {{ $gudang->nama }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="mt-4">
+                    Subject
+                    <br>
+                    <input value="{{ old("subject") }}" type="text" name="subject" placeholder="Masukanan subject"
+                        class="input input-bordered w-full" />
+                </div>
+
+                <div class="mt-2">
+                    Isi Pesan:
+                    <textarea name="isi" class="textarea textarea-bordered w-full">{{ old("isi") }}</textarea>
+                </div>
+
+                <div class="mt-3 flex justify-center items-center">
+                    <button type="submit" class="btn btn-wide bg-slate-800 text-white">Buat</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section class="mt-5 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+        <div class="p-6 card bg-white border-b border-gray-200">
             <h3 class="text-2xl py-3 text-black font-extrabold text-center">Buat Gudang</h3>
             @if($errors->any())
                 <div>
@@ -79,35 +116,8 @@
                         class="input input-bordered w-full" />
                 </div>
 
-                <div class="mt-2">
-                    Jumlah
-                    <br>
-                    <input value="{{ old("jumlah") }}" type="number" name="jumlah" placeholder="Masukanan jumlah Gudang"
-                        class="input input-bordered w-full" />
-                </div>
-
-                <div class="mt-2">
-                    Gudang
-                    <br>
-                    <select name="gudang_id" class="py-1 text-sm select select-bordered w-full max-w-xs">
-                        <option disabled>Nama Gudang</option>
-                        @foreach ($gudangs as $gudang)
-                            <option value="{{ $gudang->id }}" {{ old("gudang_id") == $gudang->id ? "selected" : "" }}>
-                                {{ $gudang->nama }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="mt-2">
-                    Harga
-                    <br>
-                    <input value="{{ old("harga") }}" type="number" name="harga" placeholder="Masukanan harga Gudang"
-                        class="input input-bordered w-full" />
-                </div>
-
                 <div class="mt-3 flex justify-center items-center">
-                    <button type="submit" class="btn btn-wide">Buat</button>
+                    <button type="submit" class="btn btn-wide bg-slate-800 text-white">Buat</button>
                 </div>
             </form>
         </div>

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\GudangEmail;
 use App\Models\Gudang;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Mail;
 
 class GudangController extends Controller
 {
@@ -110,12 +112,31 @@ class GudangController extends Controller
     public function aktifProcess(Request $request)
     {
         $request->validate([
-            "id" => "required|exists:gudang,id"
+            "id" => "required|exists:gudangs,id"
         ]);
 
         $gudang = Gudang::onlyTrashed()->find($request->id);
         $gudang->restore();
 
         return back();
+    }
+
+    public function kirimPesan(Request $request)
+    {
+        $request->validate([
+            "gudang_id" => "required|exists:gudangs,id",
+            "subject" => "required|string|max:255",
+            "isi" => "required|string",
+        ]);
+
+        $gudang = Gudang::find($request->gudang_id);
+        
+        Mail::to($gudang->email)
+            ->queue(new GudangEmail(
+                $request->subject,
+                $request->isi
+            ));
+
+        return back()->with('success', 'Pesan berhasil dikirim ke gudang.');
     }
 }

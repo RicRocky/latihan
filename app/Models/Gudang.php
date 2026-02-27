@@ -13,7 +13,11 @@ class Gudang extends Model
 
     protected $fillable = [
         "nama",
+        "email", // added when email column was introduced
     ];
+
+    // use the default table name (plural) or specify explicitly:
+    protected $table = "gudangs";
 
     public function items(): HasMany{
         return $this->hasMany(Item::class); 

@@ -22,7 +22,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', "verified"])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
@@ -37,6 +37,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get("/profile", [UserController::class, "profile"])->name("profile");
     Route::post("/edit-avatar", [UserController::class, "editAvatar"])->name("edit-avatar");
+
+    Route::post("kirim-pesan", [GudangController::class, "kirimPesan"])->name("kirim-pesan");
 });
 
 Route::get("/crypt", [CryptController::class, "index"]);
