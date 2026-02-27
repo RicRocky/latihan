@@ -1,5 +1,7 @@
 @extends("items/layout")
 
+@section("title-web", "OC | Edit Inventory")
+
 @section("judul", "Inventory")
 
 @section("breadcrumbs")

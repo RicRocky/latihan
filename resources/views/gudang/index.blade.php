@@ -1,6 +1,6 @@
 @extends("gudang/layout")
 
-@section("title-web", "Gudang")
+@section("title-web", "OC | Gudang")
 
 @section("judul", "Gudang")
 

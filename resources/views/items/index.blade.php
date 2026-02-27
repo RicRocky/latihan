@@ -1,6 +1,6 @@
 @extends("items/layout")
 
-@section("title-web", "Inventory")
+@section("title-web", "OC | Inventory")
 
 @section("judul", "Inventory")
 
