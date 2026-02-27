@@ -19,6 +19,8 @@ class Item extends Model
         "harga",
         "gudang_id",
     ];
+    
+    protected $with = ['gudang'];
 
     protected function casts(): array
     {
@@ -29,7 +31,8 @@ class Item extends Model
         ];
     }
 
-    public function gudang(): BelongsTo{
+    public function gudang(): BelongsTo
+    {
         return $this->belongsTo(Gudang::class)->withTrashed();
     }
 }

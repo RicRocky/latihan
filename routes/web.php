@@ -1,6 +1,7 @@
 <?php
 
 require __DIR__ . '/auth.php';
+use App\Http\Controllers\CryptController;
 use App\Http\Controllers\GudangController;
 use App\Http\Controllers\ItemController;
 use Illuminate\Support\Facades\Route;
@@ -33,3 +34,5 @@ Route::middleware('auth')->group(function () {
     // Gudang
     Route::resource('gudang', GudangController::class);
 });
+
+Route::get("/crypt", [CryptController::class, "index"]);
