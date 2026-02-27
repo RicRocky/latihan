@@ -4,6 +4,7 @@ require __DIR__ . '/auth.php';
 use App\Http\Controllers\CryptController;
 use App\Http\Controllers\GudangController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,12 +28,15 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 
     // Item
-    Route::get("inventory/aktif", [ItemController::class, "aktif"])->name("inventory.aktif");
-    Route::post("inventory/aktif-process", [ItemController::class, "aktifProcess"])->name("inventory.aktif-process");
-    Route::resource('inventory', ItemController::class)->parameters(['inventory' => 'item']);
+    Route::get("/inventory/aktif", [ItemController::class, "aktif"])->name("inventory.aktif");
+    Route::post("/inventory/aktif-process", [ItemController::class, "aktifProcess"])->name("inventory.aktif-process");
+    Route::resource('/inventory', ItemController::class)->parameters(['inventory' => 'item']);
     
     // Gudang
-    Route::resource('gudang', GudangController::class);
+    Route::resource('/gudang', GudangController::class);
+
+    Route::get("/profile", [UserController::class, "profile"])->name("profile");
+    Route::post("/edit-avatar", [UserController::class, "editAvatar"])->name("edit-avatar");
 });
 
 Route::get("/crypt", [CryptController::class, "index"]);
