@@ -30,6 +30,7 @@ Route::middleware(['auth', "verified"])->group(function () {
     // Item
     Route::get("/inventory/aktif", [ItemController::class, "aktif"])->name("inventory.aktif");
     Route::post("/inventory/aktif-process", [ItemController::class, "aktifProcess"])->name("inventory.aktif-process");
+    Route::post("/inventory/cetak", [ItemController::class, "cetak"])->name("inventory.cetak");
     Route::resource('/inventory', ItemController::class)->parameters(['inventory' => 'item']);
     
     // Gudang
