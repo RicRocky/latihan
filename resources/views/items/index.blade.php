@@ -10,7 +10,7 @@
             <h3 class="text-2xl py-3 text-black font-extrabold text-center">{{__("inventory.daftar")}}</h3>
             <div class="overflow-x-auto">
                 <form action="{{ route("inventory.index") }}" method="GET" class="mb-2">
-                     {{__("support.search")}} :
+                    {{__("support.search")}} :
                     <input type="text" value="{{ request("search") }}" placeholder="Type here" name="search"
                         class="inline-block input input-sm input-bordered max-w-xs" />
                     {{__("support.minimal jumlah")}} :
@@ -46,11 +46,12 @@
                                     <td class="text-center">{{ $item->Gudang->nama }}</td>
                                     <td class="text-left">Rp{{ $item->harga }}</td>
                                     <td class="text-center">
+                                        <a href="{{ route("inventory.detail", $item) }}" class="btn">{{ __("support.detail") }}</a>
                                         <a href="{{ route("inventory.edit", $item) }}" class="btn">{{ __("support.edit") }}</a>
                                         <form action="{{ route("inventory.destroy", $item) }}" method="POST" class="inline">
                                             @csrf
                                             @method("DELETE")
-
+                                            
                                             <button class="btn">{{__("support.hapus")}}</button>
                                         </form>
                                     </td>
@@ -68,9 +69,9 @@
                 <a class="block mr-4" href="{{ route("inventory.aktif") }}">
                     <button class="btn mt-4">{{ __("support.aktifkan") }}</button>
                 </a>
-                <a class="block" href="{{ route("inventory.cetak") }}">
+                <!-- <a class="block" href="{{ route("inventory.cetak") }}">
                     <button class="btn mt-4">{{ __("support.cetak") }}</button>
-                </a>
+                </a> -->
             </div>
         </div>
     </section>
@@ -108,8 +109,9 @@
                     <br>
                     <select name="gudang_id" class="py-1 text-sm select select-bordered w-full max-w-xs">
                         <option disabled>{{ __("support.gudang") }}</option>
-                        @foreach ($gudangs as $gudang)
-                            <option value="{{ $gudang->id }}" {{ old("gudang_id") == $gudang->id ? "selected" : "" }}>{{ $gudang->nama }}
+                        @foreach ($gudangs as $id => $nama)
+                            <option value="{{ $id }}" {{ old("gudang_id") == $id ? "selected" : "" }}>
+                                {{ $nama }}
                             </option>
                         @endforeach
                     </select>
@@ -124,6 +126,68 @@
 
                 <div class="mt-3 flex justify-center items-center">
                     <button type="submit" class="btn btn-wide">{{ __("support.buat") }}</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section class="mt-5 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+        <div class="p-6 card bg-white border-b border-gray-200">
+            <h3 class="text-2xl py-3 text-black font-extrabold text-center">{{ __("inventory.beli") }}</h3>
+            @if($errors->any())
+                <div>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <form action="{{ route('inventory.supplier') }}" method="POST" class="text-black px-auto">
+                @csrf
+                <div class="mt-2">
+                    {{ __("inventory.inventory") }}
+                    <br>
+                    <select name="item_id" class="py-1 text-sm select select-bordered w-full max-w-xs">
+                        <option disabled>{{ __("support.item") }}</option>
+                        @foreach ($itemBuys as $id => $nama)
+                            <option value="{{ $id }}" {{ old("item_id") == $id ? "selected" : "" }}>
+                                {{ $nama }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="mt-2">
+                    {{ __("support.supplier") }}
+                    <br>
+                    <select name="supplier_id" class="py-1 text-sm select select-bordered w-full max-w-xs">
+                        <option disabled>{{ __("support.supplier") }}</option>
+                        @foreach ($suppliers as $id => $nama)
+                            <option value="{{ $id }}" {{ old("supplier_id") == $id ? "selected" : "" }}>
+                                {{ $nama }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+
+                <div class="mt-2">
+                    {{ __("support.jumlah") }}
+                    <br>
+                    <input value="{{ old("jumlah") }}" type="number" name="jumlah" placeholder="Masukanan jumlah item"
+                        class="input input-bordered w-full" />
+                </div>
+
+                <div class="mt-2">
+                    {{ __("support.harga") }}
+                    <br>
+                    <input value="{{ old("harga") }}" type="number" name="harga" placeholder="Masukanan harga item"
+                        class="input input-bordered w-full" />
+                </div>
+
+                <div class="mt-3 flex justify-center items-center">
+                    <button type="submit" class="btn btn-wide">{{ __("support.beli") }}</button>
                 </div>
             </form>
         </div>

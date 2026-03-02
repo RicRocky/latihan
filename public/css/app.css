@@ -2383,6 +2383,9 @@ html {
 .ml-4 {
   margin-left: 1rem;
 }
+.ml-5 {
+  margin-left: 1.25rem;
+}
 .mr-2 {
   margin-right: 0.5rem;
 }
@@ -2496,6 +2499,15 @@ html {
 }
 .w-\[25\%\] {
   width: 25%;
+}
+.w-\[40\%\] {
+  width: 40%;
+}
+.w-\[5\%\] {
+  width: 5%;
+}
+.w-\[55\%\] {
+  width: 55%;
 }
 .w-\[72\%\] {
   width: 72%;

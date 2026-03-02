@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Gudang;
 use App\Models\Item;
+use App\Models\Supplier;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -18,7 +19,7 @@ class DatabaseSeeder extends Seeder
     {
         User::factory()->count(10)->create();
         Gudang::factory()->count(15)->create();
+        $this->call(SupplierSeeder::class);
         Item::factory()->count(100)->create();
-        Item::factory()->outOfStock()->count(25)->create();
     }
 }

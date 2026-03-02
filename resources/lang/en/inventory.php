@@ -4,4 +4,5 @@ return [
     'inventory' => 'Inventory',
     "daftar"    => "List Item",
     "buat"     => "Create Item",
+    "beli"     => "Buy Item",
 ];

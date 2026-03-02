@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Gudang;
 use App\Models\Item;
+use App\Models\Supplier;
 use App\Services\ItemService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,7 +15,9 @@ class ItemController extends Controller
     public function index(Request $request): View
     {
         $query = Item::query();
-        $gudangs = Gudang::all();
+        $gudangs = Gudang::all()->pluck("nama", "id");
+        $suppliers = Supplier::all()->pluck("nama", "id");
+        $itemBuys = Item::all()->pluck("nama", "id");
 
         if ($request->filled("search")) {
             $query->where("nama", "like", "%" . $request->search . "%");
@@ -28,6 +31,8 @@ class ItemController extends Controller
         return view('items.index', [
             'items' => $items,
             "gudangs" => $gudangs,
+            "suppliers" => $suppliers,
+            "itemBuys" => $itemBuys,
         ]);
     }
 
@@ -50,9 +55,6 @@ class ItemController extends Controller
             return back()
                 ->with('success', 'Item berhasil dibuat');
         } catch (\Throwable $e) {
-
-             // report($e); // kirim ke log
-
             return back()
                 ->withInput()
                 ->withErrors('Terjadi kesalahan saat menyimpan data.');
@@ -137,4 +139,36 @@ class ItemController extends Controller
 
         return back();
     }
+
+    public function addItemSupplier(Request $request, ItemService $itemService): RedirectResponse
+    {
+        $request->validate([
+            'jumlah' => 'required|integer|min:0',
+            'harga' => 'required|numeric|min:0',
+            'item_id' => 'required|exists:items,id',
+            'supplier_id' => 'required|exists:suppliers,id',
+        ]);
+
+        try {
+            $supplier = Supplier::find($request->supplier_id);
+            $item = Item::find($request->item_id);
+
+            $itemService->attach($supplier, $item, $request->harga, $request->jumlah);
+            return back()
+                ->with('success', 'Nota berhasil dibuat');
+        } catch (\Throwable $e) {
+            return back()
+                ->withInput()
+                ->withErrors('Terjadi kesalahan saat menyimpan data.');
+        }
+    }
+
+    public function detail(Item $item): View
+    {
+        $suppliers = $item->Suppliers()->paginate(10);
+        return view('items.detail', [
+            'item' => $item,
+            'suppliers' => $suppliers,
+        ]);
+    }   
 }

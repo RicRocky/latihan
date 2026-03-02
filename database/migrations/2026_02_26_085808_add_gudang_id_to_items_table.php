@@ -14,7 +14,7 @@ class AddGudangIdToItemsTable extends Migration
     public function up()
     {
         Schema::table('items', function (Blueprint $table) {
-            $table->foreignId("gudang_id")->constrained()->restrictOnDelete();
+            $table->foreignId("gudang_id")->constrained("gudangs")->restrictOnDelete();
         });
     }
 
@@ -26,7 +26,8 @@ class AddGudangIdToItemsTable extends Migration
     public function down()
     {
         Schema::table('items', function (Blueprint $table) {
-            $table->dropConstrainedForeignId("gudang_id");
+            $table->dropForeign(['gudang_id']);
+            $table->dropColumn('gudang_id');
         });
     }
 }

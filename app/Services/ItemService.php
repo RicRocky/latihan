@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Item;
+use App\Models\Supplier;
 use Illuminate\Support\Facades\DB;
 
 class ItemService
@@ -22,4 +23,21 @@ class ItemService
             $data["item"]->update($data["validated"]);
         });
     }
+
+    public function attach(
+        Supplier $supplier,
+        Item $item,
+        float $harga,
+        int $jumlah
+    ): void {
+        DB::transaction(function () use ($supplier, $item, $harga, $jumlah) {
+            $supplier->items()->attach($item->id, [
+                'harga' => $harga,
+                'jumlah' => $jumlah,
+            ]);
+
+            $item->increment('jumlah', $jumlah);
+        });
+    }
+
 }

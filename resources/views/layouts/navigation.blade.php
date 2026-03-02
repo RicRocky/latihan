@@ -25,7 +25,13 @@
 
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('gudang.index')" :active="request()->routeIs('gudang.*')">
-                        {{ __('gudang') }}
+                        {{ __('Gudang') }}
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('supplier.index')" :active="request()->routeIs('supplier.*')">
+                        {{ __('supplier.supplier') }}
                     </x-nav-link>
                 </div>
             </div>
