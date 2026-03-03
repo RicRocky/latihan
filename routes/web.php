@@ -23,7 +23,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['auth', "verified"])->group(function () {
+// Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
@@ -37,16 +38,23 @@ Route::middleware(['auth', "verified"])->group(function () {
     
     // Gudang
     Route::resource('/gudang', GudangController::class);
-
-    Route::get("/profile", [UserController::class, "profile"])->name("profile");
-    Route::post("/edit-avatar", [UserController::class, "editAvatar"])->name("edit-avatar");
-
     Route::post("kirim-pesan", [GudangController::class, "kirimPesan"])->name("kirim-pesan");
 
+    // Supplier
     Route::resource("/supplier", SupplierController::class);
-
+    
     // Item Supplier
     Route::post("/item-supplier", [ItemController::class, "addItemSupplier"])->name("inventory.supplier");
+    
+    //User
+    Route::get("/users", [UserController::class, "index"])->name("user.index");
+    Route::get("/users/{user}", [UserController::class, "edit"])->name("user.edit");
+    Route::put("/users/{user}", [UserController::class, "update"])->name("user.update");
+
+    // Profile
+    Route::get("/profile", [UserController::class, "profile"])->name("profile");
+    Route::post("/edit-avatar", [UserController::class, "editAvatar"])->name("edit-avatar");
+    Route::post("/get-alamat", [UserController::class, "getAlamat"])->name("get-alamat");
 });
 
 Route::get("/crypt", [CryptController::class, "index"]);

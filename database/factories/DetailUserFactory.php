@@ -16,10 +16,7 @@ class DetailUserFactory extends Factory
         return [
             "avatar" => null,
             "tgl_lahir" => $this->faker->date(),
-            "provinsi" => $this->faker->word(),
-            "kota" => $this->faker->word(),
-            "kecamatan" => $this->faker->word(),
-            "kelurahan" => $this->faker->word(),
+            "alamat" => $this->faker->address(),
             "catatan" => $this->faker->paragraph(),
         ];
     }

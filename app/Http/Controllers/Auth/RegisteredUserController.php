@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Wilayah;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -20,7 +21,47 @@ class RegisteredUserController extends Controller
      */
     public function create()
     {
-        return view('auth.register');
+        $provinsi = Wilayah::where("kode", "like", "__")->get();
+        return view('auth.register', compact("provinsi"));
+    }
+
+    public function getKota(Request $request)
+    {
+        $validated = $request->validate([
+            'kodeProvinsi' => 'required|string|size:2'
+        ]);
+
+        $kota = Wilayah::where("kode", "like", $validated["kodeProvinsi"] . "___")->get();
+        return response()->json([
+            "msg" => "success",
+            "data" => $kota
+        ], 200);
+    }
+
+    public function getKecamatan(Request $request)
+    {
+        $validated = $request->validate([
+            'kodeKota' => 'required|string|size:5'
+        ]);
+
+        $kecamatan = Wilayah::where("kode", "like", $validated["kodeKota"] . "___")->get();
+        return response()->json([
+            "msg" => "success",
+            "data" => $kecamatan
+        ], 200);
+    }
+
+    public function getDesa(Request $request)
+    {
+        $validated = $request->validate([
+            'kodeKecamatan' => 'required|string|size:8'
+        ]);
+
+        $desa = Wilayah::where("kode", "like", $validated["kodeKecamatan"] . "_____")->get();
+        return response()->json([
+            "msg" => "success",
+            "data" => $desa
+        ], 200);
     }
 
     /**
@@ -41,7 +82,8 @@ class RegisteredUserController extends Controller
             "kota" => ['required', 'string'],
             "kecamatan" => ['required', 'string'],
             "kelurahan" => ['required', 'string'],
-            "detail_alamat" => ['string'],
+            "detail_alamat" => ["required", 'string'],
+            "catatan" => ['string'],
         ]);
 
         $user = User::create([
@@ -51,11 +93,9 @@ class RegisteredUserController extends Controller
         ]);
 
         $user->detailUser()->create([
-            "provinsi" => explode("-", $request->provinsi)[1],
-            "kota" => explode("-", $request->kota)[1],
-            "kecamatan" => explode("-", $request->kecamatan)[1],
-            "kelurahan" => explode("-", $request->kelurahan)[1],
-            "catatan" => $request->detail_alamat,
+            "kelurahan_id" => $request->kelurahan,
+            "alamat" => $request->detail_alamat,
+            "catatan" => $request->catatan,
         ]);
 
         event(new Registered($user));

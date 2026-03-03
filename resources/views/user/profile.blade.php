@@ -6,7 +6,7 @@
 
 @section("content")
     @if(session("success"))
-        <div id="flash-alert" class="alert alert-success absolute bottom-4 right-4 sm:w-[40vw] md:w-[25vw]">
+        <div id="flash-  alert" class="alert alert-success absolute bottom-4 right-4 sm:w-[40vw] md:w-[25vw]">
             <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -36,9 +36,9 @@
         <div class="p-6 card bg-white border-b border-gray-200">
             <h3 class="text-2xl py-3 text-black font-extrabold text-center">Profile</h3>
             <div class="avatar grid place-content-center    ">
-                <div class="w-32 rounded relative">
+                <div class="w-[500px] rounded relative">
                     <img
-                        src="{{ Auth:: user()->detailUser()->avatar ? Storage::url(Auth()->user()->detailUser()->avatar) : asset('default-avatar.png') }}">
+                        src="{{ Auth::user()->detailUser->avatar ? Storage::url(Auth()->user()->detailUser->avatar) : asset('default-avatar.png') }}">
                 </div>
                 <button class="btn bg-slate-800 text-white" onclick="editAvatar.showModal()">Ubah Avatar</button>
             </div>
@@ -47,25 +47,52 @@
                     <div class="w-[25%] ">
                         <div>Nama</div>
                         <div>Email</div>
+                        <div>Tanggal Lahir</div>
+                        <div>Alamat</div>
+                        <div>Catatan Alamat</div>
                     </div>
                     <div>
+                        <div>:</div>
+                        <div>:</div>
+                        <div>:</div>
                         <div>:</div>
                         <div>:</div>
                     </div>
                     <div class="w-[72%] pl-2">
                         <div>{{ Auth()->user()->name }}</div>
                         <div>{{ Auth()->user()->email }}</div>
+                        <div>{{ Auth()->user()->detailUser->tgl_lahir}}</div>
+                        <div>{{ Auth()->user()->detailUser->alamat}}</div>
+                        <div>{{ Auth()->user()->detailUser->catatan ?? 'N/A' }}</div>
                     </div>
                 </div>
             </div>
-            <div class="mt-6">
-                <button class="btn bg-slate-800 text-white">Ubah Email</button>
+
+            <div class="mt-4 p-6 w-full bg-slate-100 rounded-md">
+                <div class="flex">
+                    <div class="w-[25%] ">
+                        <div>Provinsi</div>
+                        <div>Kabupaten</div>
+                        <div>Kecamatan</div>
+                        <div>Kelurahan</div>
+                    </div>
+                    <div>
+                        <div>:</div>
+                        <div>:</div>
+                        <div>:</div>
+                        <div>:</div>
+                    </div>
+                    <div class="w-[72%] pl-2" id="data">
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 @endsection
 
 @section("script")
+    <script src="https://code.jquery.com/jquery-4.0.0.js" integrity="sha256-9fsHeVnKBvqh3FB2HYu7g2xseAZ5MlN6Kz/qnkASV8U="
+        crossorigin="anonymous"></script>
     <script>
         setTimeout(() => {
             const alert = document.getElementById('flash-alert');
@@ -74,5 +101,26 @@
                 setTimeout(() => alert.remove(), 500);
             }
         }, 3000);
+
+        $.ajax({
+            url: "{{ route('get-alamat') }}",
+            method: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                "kode_kelurahan": "{{ Auth::user()->detailUser->kelurahan_id }}"
+            },
+            success: function (data) {
+                console.log(data);
+
+                $("#data").html(`
+                                <div>${data.provinsi}</div>
+                                <div>${data.kabupaten}</div>
+                                <div>${data.kecamatan}</div>
+                                <div>${data.kelurahan}</div>
+                            `);
+            }, error: function (err) {
+                console.error(err);
+            }
+        });
     </script>
 @endsection

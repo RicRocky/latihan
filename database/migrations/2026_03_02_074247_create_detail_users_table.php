@@ -21,7 +21,7 @@ class CreateDetailUsersTable extends Migration
             $table->string("provinsi");
             $table->string("kota");
             $table->string("kecamatan");
-            $table->string("kelurahan");
+            $table->string("kelurahan")->nullable();
             $table->text("catatan")->nullable();
             $table->timestamps();
         });

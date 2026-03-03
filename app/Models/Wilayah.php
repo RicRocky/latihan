@@ -7,5 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Wilayah extends Model
 {
-    use HasFactory;
+    protected $guarded = [
+        "kode",
+        "nama",
+    ];
+
+    protected $table = "wilayah";
+    
 }

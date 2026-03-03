@@ -29,7 +29,6 @@
                             <th>{{__("support.jumlah")}}</th>
                             <th>{{__("support.gudang")}}</th>
                             <th>{{__("support.harga")}}</th>
-                            <th>{{__("support.aksi")}}</th>
                         </tr>
                     </thead>
                     <tbody>

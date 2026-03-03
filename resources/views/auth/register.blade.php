@@ -34,28 +34,39 @@
             <div class="mt-4">
                 <x-label for="provinsi" :value="__('Provinsi')" />
 
-                <select name="provinsi" id="provinsi"></select>
+                <select name="provinsi" id="provinsi">
+                    <option value="0" disabled selected>Pilih Provinsi</option>
+                    @foreach ($provinsi as $p)
+                        <option value="{{ $p->kode }}">{{ $p->nama }}</option>
+                    @endforeach
+                </select>
             </div>
 
             <!-- Kota Address -->
             <div class="mt-4">
                 <x-label for="kota" :value="__('Kabupaten/Kota')" />
 
-                <select name="kota" id="kota"></select>
+                <select name="kota" id="kota" disabled>
+                    <option value="0" disabled selected>Pilih Kota</option>
+                </select>
             </div>
 
             <!-- Kecamatan Address -->
             <div class="mt-4">
                 <x-label for="kecamatan" :value="__('Kecamatan')" />
 
-                <select name="kecamatan" id="kecamatan"></select>
+                <select name="kecamatan" id="kecamatan" disabled>
+                    <option value="0" disabled selected>Pilih Kecamatan</option>
+                </select>
             </div>
 
             <!-- Kelurahan Address -->
             <div class="mt-4">
                 <x-label for="kelurahan" :value="__('Desa/Kelurahan')" />
 
-                <select name="kelurahan" id="kelurahan"></select>
+                <select name="kelurahan" id="kelurahan" disabled>
+                    <option value="0" disabled selected>Pilih Kelurahan</option>
+                </select>
             </div>
 
             <!-- Detail Alamat -->
@@ -64,6 +75,14 @@
 
                 <x-input id="detail_alamat" class="block mt-1 w-full" type="text" name="detail_alamat"
                     :value="old('detail_alamat')" required autofocus />
+            </div>
+
+            <!-- Catatan -->
+            <div class="mt-4">
+                <x-label for="catatan" :value="__('Catatan')" />
+
+                <x-input id="catatan" class="block mt-1 w-full" type="text" name="catatan"
+                    :value="old('catatan')" required autofocus />
             </div>
 
             <!-- Password -->
@@ -101,92 +120,87 @@
         let nodeKecamatan = $("#kecamatan");
         let nodeKelurahan = $("#kelurahan");
 
-        $.ajax({
-            url: "https://api-regional-indonesia.vercel.app/api/provinces",
-            method: "GET",
-            type: "JSON",
-            success: function (data) async{
-                // console.log("Provinsi data: " + data);
-
-                nodeProvinsi.append(
-                    `<option value="0" disabled selected>Pilih Provinsi</option>`
-                );
-
-                nodeKota.append(
-                    `<option value="0" disabled selected>Pilih Kota</option>`
-                );
-                nodeKota.attr("disabled", true);
-
-                nodeKecamatan.append(
-                    `<option value="0" disabled selected>Pilih Kecamatan</option>`
-                );
-                nodeKecamatan.attr("disabled", true);
-
-                nodeKelurahan.append(
-                    `<option value="0" disabled selected>Pilih Kelurahan</option>`
-                );
-                nodeKelurahan.attr("disabled", true);
-
-                data.data.forEach(item => {
-                    let value = item.id + "-" + item.name;
-                    nodeProvinsi.append(
-                        `<option value="${value}">${item.name}</option>`
-                    );
-                });
-                nodeProvinsi.on("change", function () {
-                    kota(this.value);
-                });
-            }
+        nodeProvinsi.on("change", function () {
+            console.log("Value:" + nodeProvinsi.val());
+            kota(this.value);
         });
 
         let kota = id => {
-            id = id.split("-")[0];
-            if (id != 0) {
-                $.ajax({
-                    url: `https://api-regional-indonesia.vercel.app/api/cities/${id}`,
-                    method: "GET",
-                    type: "JSON"
-                    success: function (data) async{
-                        console.log("Kota data: " + data);
-                        nodeKota.empty();
+            $.ajax({
+                url: `{{ route("register.get-kota") }}`,
+                method: "POST",
+                type: "JSON",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "kodeProvinsi": id
+                },
+                success: function (data) {
+                    console.log("Kota data: " + data);
+
+                    nodeKota.empty();
+                    
+                    nodeKecamatan.empty(); 
+                    nodeKecamatan.append(
+                        `<option value="0" disabled selected>Pilih Kecamatan</option>`
+                    );
+
+                    nodeKelurahan.empty();
+                    nodeKelurahan.append(
+                        `<option value="0" disabled selected>Pilih Kelurahan</option>`
+                    );
+                    
+                    nodeKota.append(
+                        `<option value="0" disabled selected>Pilih Kota</option>`
+                    );
+                    nodeKota.attr("disabled", false);
+
+                    data.data.forEach(item => {
                         nodeKota.append(
-                            `<option value="0" disabled selected>Pilih Kota</option>`
+                            `<option value="${item.kode}">${item.nama}</option>`
                         );
-                        nodeKota.attr("disabled", false);
-                        data.data.forEach(item => {
-                            let value = item.id + "-" + item.name;
-                            nodeKota.append(
-                                `<option value="${value}">${item.name}</option>`
-                            );
-                        });
-                        nodeKota.on("change", function () {
-                            kecamatan(this.value);
-                        });
-                    }
-                });
-            }
+                    });
+
+                    nodeKota.on("change", function () {
+                        kecamatan(this.value);
+                    });
+                }, error: function (err) {
+                    console.log("Error: " + err);
+                }
+            });
+            console.log("4");
         }
 
         let kecamatan = id => {
-            id = id.split("-")[0];
             if (id != 0) {
                 $.ajax({
-                    url: `https://api-regional-indonesia.vercel.app/api/districts/${id}`,
-                    method: "GET",
+                    url: `{{ route("register.get-kecamatan") }}`,
+                    method: "POST",
                     type: "JSON",
-                    success: function (data) async{
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        "kodeKota": id
+                    },
+                    success: function (data) {
                         console.log("Kecamatan data: " + data);
+
                         nodeKecamatan.empty();
+
+                        nodeKelurahan.empty();
+                        nodeKelurahan.append(
+                            `<option value="0" disabled selected>Pilih Kelurahan</option>`
+                        );
+
                         nodeKecamatan.append(
                             `<option value="0" disabled selected>Pilih Kecamatan</option>`
                         );
                         nodeKecamatan.attr("disabled", false);
+
                         data.data.forEach(item => {
-                            let value = item.id + "-" + item.name;
                             nodeKecamatan.append(
-                                `<option value="${value}">${item.name}</option>`
+                                `<option value="${item.kode}">${item.nama}</option>`
                             );
                         });
+
                         nodeKecamatan.on("change", function () {
                             kelurahan(this.value)
                         });
@@ -196,23 +210,28 @@
         }
 
         let kelurahan = id => {
-            id = id.split("-")[0];
             if (id != 0) {
                 $.ajax({
-                    url: `https://api-regional-indonesia.vercel.app/api/villages/${id}`,
-                    method: "GET",
+                    url: `{{ route("register.get-kelurahan") }}`,
+                    method: "POST",
                     type: "JSON",
-                    success: function (data) async{
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        "kodeKecamatan": id
+                    },
+                    success: function (data) {
                         console.log("Kelurahana data: " + data);
+
                         nodeKelurahan.empty();
+
                         nodeKelurahan.append(
                             `<option value="0" disabled selected>Pilih Kelurahan</option>`
                         );
                         nodeKelurahan.attr("disabled", false);
+
                         data.data.forEach(item => {
-                            let value = item.id + "-" + item.name;
                             nodeKelurahan.append(
-                                `<option value="${value}">${item.name}</option>`
+                                `<option value="${item.kode}">${item.nama}</option>`
                             );
                         });
 

@@ -13,14 +13,29 @@ class DetailUser extends Model
         "user_id",
         "avatar",
         "tgl_lahir",
-        "provinsi",
-        "kota",
-        "kecamatan",
-        "kelurahan",
+        "kelurahan_id",
+        "alamat",
+        "catatan",
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
-    } 
+    }
+
+    public function getWilayahAttribute()
+    {
+        if (!$this->kelurahan_id) {
+            return null;
+        }
+
+        $kode = $this->kelurahan_id;
+
+        return [
+            "provinsi" => Wilayah::where('kode', substr($kode, 0, 2))->value("nama"),
+            "kota" => Wilayah::where('kode', substr($kode, 0, 5))->value("nama"),
+            "kecamatan" => Wilayah::where('kode', substr($kode, 0, 8))->value("nama"),
+            "kelurahan" => Wilayah::where('kode', $kode)->value("nama"),
+        ];
+    }
 }
