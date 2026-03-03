@@ -37,12 +37,25 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            "provinsi" => ['required', 'string'],
+            "kota" => ['required', 'string'],
+            "kecamatan" => ['required', 'string'],
+            "kelurahan" => ['required', 'string'],
+            "detail_alamat" => ['string'],
         ]);
 
         $user = User::create([
             'name' => $request->name,
-            'email' => $request->email, 
+            'email' => $request->email,
             'password' => Hash::make($request->password),
+        ]);
+
+        $user->detailUser()->create([
+            "provinsi" => explode("-", $request->provinsi)[1],
+            "kota" => explode("-", $request->kota)[1],
+            "kecamatan" => explode("-", $request->kecamatan)[1],
+            "kelurahan" => explode("-", $request->kelurahan)[1],
+            "catatan" => $request->detail_alamat,
         ]);
 
         event(new Registered($user));

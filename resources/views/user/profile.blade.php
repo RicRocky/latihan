@@ -38,7 +38,7 @@
             <div class="avatar grid place-content-center    ">
                 <div class="w-32 rounded relative">
                     <img
-                        src="{{ Auth()->user()->avatar ? Storage::url(Auth()->user()->avatar) : asset('default-avatar.png') }}">
+                        src="{{ Auth:: user()->detailUser()->avatar ? Storage::url(Auth()->user()->detailUser()->avatar) : asset('default-avatar.png') }}">
                 </div>
                 <button class="btn bg-slate-800 text-white" onclick="editAvatar.showModal()">Ubah Avatar</button>
             </div>
