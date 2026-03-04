@@ -25,7 +25,7 @@ class UserController extends Controller
         $user = auth()->user();
 
         if ($user->avatar) {
-            Storage::disk('public')->delete($user->avatar);
+            Storage::disk('public')->delete($user->detailUser->avatar);
         }
 
         $path = $request->file('avatar')
@@ -104,25 +104,38 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
             'tgl_lahir' => 'required|date',
             'kelurahan_id' => 'required|string|min:8',
             'alamat' => 'required|string|max:255',
             'catatan' => 'nullable|string',
+            'avatar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         try {
-            DB::transaction(function () use ($user, $validated) {
+            DB::transaction(function () use ($request, $user, $validated) {
 
                 $user->update([
                     'name' => $validated['name'],
                 ]);
 
-                $user->detailUser()->update([
+                $dataDetail = [
                     'tgl_lahir' => $validated['tgl_lahir'],
                     'kelurahan_id' => $validated['kelurahan_id'],
                     'alamat' => $validated['alamat'],
-                    'catatan' => $validated['catatan'],
-                ]);
+                    'catatan' => $validated['catatan'] ?? null,
+                ];
+
+                if ($request->hasFile('avatar')) {
+
+                    if ($user->detailUser?->avatar && Storage::disk('public')->exists($user->detailUser->avatar)) {
+                        Storage::disk('public')->delete($user->detailUser->avatar);
+                    }
+
+                    $dataDetail['avatar'] = $request->file('avatar')->store('avatars', 'public');
+                }
+
+                $user->detailUser()->update($dataDetail);
             });
 
             return redirect()

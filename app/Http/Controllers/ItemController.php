@@ -27,7 +27,7 @@ class ItemController extends Controller
             $query->where('jumlah', ">=", $request->minJumlah);
         }
 
-        $items = $query->latest()->paginate(10)->withQueryString();
+        $items = $query->with("gudang:id,nama")->latest()->paginate(10)->withQueryString();
         return view('items.index', [
             'items' => $items,
             "gudangs" => $gudangs,

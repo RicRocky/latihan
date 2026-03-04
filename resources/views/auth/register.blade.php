@@ -30,6 +30,14 @@
                     required />
             </div>
 
+            <!-- Tanggal Lahir -->
+            <div class="mt-4">
+                <x-label for="tgl_lahir" :value="__('Tanggal Lahir')" />
+
+                <x-input id="tgl_lahir" class="block mt-1 w-full" type="date" name="tgl_lahir" :value="old('tgl_lahir')"
+                    required />
+            </div>
+
             <!-- Provinsi Address -->
             <div class="mt-4">
                 <x-label for="provinsi" :value="__('Provinsi')" />

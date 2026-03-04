@@ -13,6 +13,7 @@ return [
     "buat"  => "Buat",
     "detail"  => "Detail",
     "beli"  => "Beli",
+    "ubah"  => "Ubah",
     "cetak"  => "Cetak",
     "alamat"  => "Alamat",
     "email"  => "Email",

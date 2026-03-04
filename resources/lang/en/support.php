@@ -14,6 +14,7 @@ return [
     "detail" => "Details",
     "beli" => "Buy",
     "cetak" => "Print",
+    "ubah" => "Update",
     "alamat" => "Address",
     "email" => "Email",
     "telepon" => "Phone",

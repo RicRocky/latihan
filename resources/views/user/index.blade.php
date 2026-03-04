@@ -19,6 +19,7 @@
                     <thead>
                         <tr class="text-white text-center bg-black">
                             <th>No</th>
+                            <th>Profile</th>
                             <th>{{ __("user.nama") }}</th>
                             <th>Email</th>
                             <th>{{ __("user.tgl_lahir") }}</th>
@@ -40,6 +41,14 @@
                             @foreach ($users as $user)
                                 <tr>
                                     <td>{{ $loop->iteration + ($users->currentPage() - 1) * $users->perPage() }}</td>
+                                    <td>
+                                        <div class="avatar">
+                                            <div class="w-10 rounded-full">
+                                                <img
+                                                    src="{{ $user->detailUser->avatar ? Storage::url($user->detailUser->avatar) : asset('default-avatar.png') }}" />
+                                            </div>
+                                        </div>
+                                    </td>
                                     <td>{{ $user->name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->detailUser->tgl_lahir }}</td>
@@ -50,7 +59,7 @@
                                     <td>{{ $user->detailUser->wilayah['kecamatan'] }}</td>
                                     <td>{{ $user->detailUser->wilayah['kelurahan'] }}</td>
                                     <td>
-                                        <a href="{{ route("user.edit", $user) }}" class="btn btn-sm">{{ __("support.edit") }}</a>
+                                        <a href="{{ route(  "user.edit", $user) }}" class="btn btn-sm">{{ __("support.edit") }}</a>
                                     </td>
                                 </tr>
                             @endforeach

@@ -18,6 +18,10 @@ class DetailUser extends Model
         "catatan",
     ];
 
+    protected $casts = [
+        'tgl_lahir' => 'date',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

@@ -25,7 +25,6 @@
                 <button type="submit" class="btn bg-orange-200">Ubah</button>
             </form>
             <form method="dialog" class="mt-6">
-                <!-- if there is a button in form, it will close the modal -->
                 <button class="btn">Close</button>
             </form>
             <p class="py-4 text-xs font-bold">*Press ESC key or click the button below to close</p>
@@ -113,11 +112,11 @@
                 console.log(data);
 
                 $("#data").html(`
-                                <div>${data.provinsi}</div>
-                                <div>${data.kabupaten}</div>
-                                <div>${data.kecamatan}</div>
-                                <div>${data.kelurahan}</div>
-                            `);
+                                    <div>${data.provinsi}</div>
+                                    <div>${data.kabupaten}</div>
+                                    <div>${data.kecamatan}</div>
+                                    <div>${data.kelurahan}</div>
+                                `);
             }, error: function (err) {
                 console.error(err);
             }

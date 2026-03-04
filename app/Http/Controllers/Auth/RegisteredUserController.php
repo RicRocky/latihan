@@ -79,6 +79,7 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             "provinsi" => ['required', 'string'],
+            "tgl_lahir" => ['required', 'date'],
             "kota" => ['required', 'string'],
             "kecamatan" => ['required', 'string'],
             "kelurahan" => ['required', 'string'],
@@ -96,6 +97,7 @@ class RegisteredUserController extends Controller
             "kelurahan_id" => $request->kelurahan,
             "alamat" => $request->detail_alamat,
             "catatan" => $request->catatan,
+            "tgl_lahir" => $request->tgl_lahir,
         ]);
 
         event(new Registered($user));
