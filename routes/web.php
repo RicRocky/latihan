@@ -7,6 +7,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
+use \App\Http\Controllers\Admin\UserController as AdminUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Auth::routes();
 
 Route::get('/', function () {
     return view('welcome');
@@ -35,17 +37,17 @@ Route::middleware(['auth'])->group(function () {
     Route::post("/inventory/cetak", [ItemController::class, "cetak"])->name("inventory.cetak");
     Route::get("/inventory/detail/{item}", [ItemController::class, "detail"])->name("inventory.detail");
     Route::resource('/inventory', ItemController::class)->parameters(['inventory' => 'item']);
-    
+
     // Gudang
     Route::resource('/gudang', GudangController::class);
     Route::post("kirim-pesan", [GudangController::class, "kirimPesan"])->name("kirim-pesan");
 
     // Supplier
     Route::resource("/supplier", SupplierController::class);
-    
+
     // Item Supplier
     Route::post("/item-supplier", [ItemController::class, "addItemSupplier"])->name("inventory.supplier");
-    
+
     //User
     Route::get("/users", [UserController::class, "index"])->name("user.index");
     Route::get("/users/{user}", [UserController::class, "edit"])->name("user.edit");
@@ -58,3 +60,16 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get("/crypt", [CryptController::class, "index"]);
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+    Route::get("/admin/dashboard", function () {
+        return view("adminlte.dashboard");
+    })->name("admin.dashboard");
+
+    // User
+    Route::get("/admin/user/index", [AdminUserController::class, "index"])->name("admin.users");
+    Route::delete("/admin/user/delete", [AdminUserController::class, "delete"])->name("admin.user.delete");
+
+});

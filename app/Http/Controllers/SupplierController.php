@@ -52,7 +52,7 @@ class SupplierController extends Controller
 
     public function show(Supplier $supplier): View
     {
-        return view('supplier.show', [
+        return view('supplier.show', [ 
             'supplier' => $supplier,
         ]);
     }
