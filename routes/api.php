@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\WilayahController;
-use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\UserController as ApiUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,4 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get("/provinsi", [WilayahController::class, "getProvinsi"]);
 Route::get("/kota/{id}", [WilayahController::class, "getKotaApi"]);
+
+Route::get("/users", [ApiUserController::class, "index"]);
